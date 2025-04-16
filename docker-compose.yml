@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  # Servicio para la API Flask
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile  # Dockerfile para Flask
+    container_name: flask_api
+    ports:
+      - "5000:5000"  # Exponemos el puerto de la API
+    environment:
+      - DB_HOST=db
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=postgres
+    depends_on:
+      - db
+    networks:
+      - app-network
+    volumes:
+      - .:/app
+    restart: always
+
+  # Servicio para la página HTML servida con Nginx
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.nginx  # Dockerfile para Nginx (HTML)
+    container_name: web_server
+    ports:
+      - "8080:80"  # Servimos la página HTML en el puerto 8080
+    networks:
+      - app-network
+    restart: always
+
+  # Servicio de base de datos PostgreSQL (si lo necesitas)
+  db:
+    image: postgres:13
+    container_name: postgres_db
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    networks:
+      - app-network
+    restart: always
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres-data:

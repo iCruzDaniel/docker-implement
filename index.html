@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Enviar Mensaje a la API</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 2rem;
+    }
+    input, button {
+      padding: 0.5rem;
+      font-size: 1rem;
+    }
+    #respuesta {
+      margin-top: 1rem;
+      color: green;
+    }
+  </style>
+</head>
+<body>
+  <h2>Enviar mensaje a la API Flask</h2>
+  <input type="text" id="mensaje" placeholder="Escribe tu mensaje..." />
+  <button onclick="enviarMensaje()">Enviar</button>
+  <div id="respuesta"></div>
+
+  <script>
+    function enviarMensaje() {
+      const mensaje = document.getElementById('mensaje').value;
+
+      fetch('http://localhost:5000/mensaje', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ mensaje: mensaje })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.status) {
+          document.getElementById('respuesta').textContent = "✅ " + data.status;
+        } else {
+          document.getElementById('respuesta').textContent = "⚠️ " + data.error;
+        }
+      })
+      .catch(error => {
+        console.error(error);
+        document.getElementById('respuesta').textContent = "❌ Error al conectar con la API";
+      });
+    }
+  </script>
+</body>
+</html>
