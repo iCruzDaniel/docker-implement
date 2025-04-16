@@ -9,11 +9,8 @@ services:
     container_name: flask_api
     ports:
       - "5000:5000"  # Exponemos el puerto de la API
-    environment:
-      - DB_HOST=db
-      - DB_USER=postgres
-      - DB_PASSWORD=postgres
-      - DB_NAME=postgres
+    env_file:
+      - .env  # Usamos el archivo .env para cargar las variables de entorno
     depends_on:
       - db
     networks:
@@ -34,16 +31,14 @@ services:
       - app-network
     restart: always
 
-  # Servicio de base de datos PostgreSQL (si lo necesitas)
+  # Servicio de base de datos PostgreSQL
   db:
     image: postgres:13
     container_name: postgres_db
     volumes:
       - postgres-data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=postgres
+    env_file:
+      - .env  # Usamos el archivo .env para cargar las variables de entorno
     networks:
       - app-network
     restart: always
