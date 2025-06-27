@@ -4,7 +4,7 @@ services:
   # Servicio para la API Flask
   api:
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile  # Dockerfile para Flask
     container_name: flask_api
     ports:
@@ -22,7 +22,7 @@ services:
   # Servicio para la página HTML servida con Nginx
   web:
     build:
-      context: .
+      context: ./fronedend
       dockerfile: Dockerfile.nginx  # Dockerfile para Nginx (HTML)
     container_name: web_server
     ports:
